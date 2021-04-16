@@ -22,16 +22,16 @@ def login(actualUser):
                 if (actualPass == ""):
                     newPassword = input("This is the first time the account is being used. You must create a new password.\nPasswords may contain 1-24 upper- or lower-case letters or numbers. Choose an uncommon password that would be difficult to guess.")
                     if (len(newPassword) < 25 and len(newPassword) > 0 and newPassword.isalnum() and (newPassword.isnumeric() or newPassword.isalpha())):
-                        return ("Password is too easy to guess")
+                        return ("Password is too easy to guess.")
                     elif (len(newPassword) < 25 and len(newPassword) > 0 and newPassword.isalnum()):
                         checkNew = input("Reenter the same password: ")
                         if (checkNew == newPassword):
                             file.write(actualUser + "," + newPassword + ",1" +'\n')
-                            return ("Ok")
+                            return ("Ok.")
                         else:
-                            return ("Passwords do not match")
+                            return ("Passwords do not match.")
                     else:
-                        return ("Password contains illegal characters")
+                        return ("Password contains illegal characters.")
                 actualPass = input("Enter your password: ")
                 logged_in = password == actualPass
                 if logged_in:
