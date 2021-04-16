@@ -7,12 +7,14 @@ def login(actualUser):
     """
     Part of the code retrieved:
     https://stackoverflow.com/questions/46747524/creating-a-login-program-that-recalls-information-from-text-files
+    File format: username,password,status
+    Status == 1 - Logged In
+    Status == 0 - Logged Out
     """
     logged_in = False
     
     with open('Login.txt', 'w+') as file:
         for line in file:
-            #TODO: Add status to see if already logged it
             username, password, status = line.split(',')
             #Check the username against the one supplied
             if username == actualUser:
