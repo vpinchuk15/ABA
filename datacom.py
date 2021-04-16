@@ -4,6 +4,7 @@
 #PLEASE READ: Before intial use need to create database via datacom.UserDatabase()
 
 import pickle
+import csv
 
 class UserDatabase:
     """
@@ -31,7 +32,7 @@ class Record:
     The record conatins the information about a particular record.
     """
     def __init__(self, recordID, SN = None, GN = None, PEM = None, WEM = None, PPH = None,
-                WPH = None, SA = None, CITY = None, PC = None):
+                WPH = None, SA = None, CITY = None, STP = None, CTY = None, PC = None):
         self.recordID = recordID
         self.SN = SN
         self.GN = GN
@@ -41,19 +42,19 @@ class Record:
         self.WPH = WPH
         self.SA = SA
         self.CITY = CITY
+        self.STP = STP
+        self.CTY = CTY
         self.PC = PC
 
 def addRecord(username, recordID, SN = None, GN = None, PEM = None, WEM = None, PPH = None,
-                WPH = None, SA = None, CITY = None, PC = None):
+                WPH = None, SA = None, CITY = None, STP = None, CTY= None, PC = None):
     """
     Adds a record to the given users contacts.
     """
-    if not check(recordID, SN, GN, PEM, WEM, PPH, WPH, SA, CITY, PC):
+    if not check(recordID, SN, GN, PEM, WEM, PPH, WPH, SA, CITY, STP, CTY, PC):
         return None
     else:
         users = openDatabase()
-
-        users.values()
 
         if users.get(username, None) == None:
             users[username] = User(username)
@@ -63,7 +64,7 @@ def addRecord(username, recordID, SN = None, GN = None, PEM = None, WEM = None, 
             return None
         
         if users[username].contacts.get(recordID, None) == None:
-            users[username].contacts[recordID] = Record(recordID, SN, GN, PEM, WEM, PPH, WPH, SA, CITY, PC)
+            users[username].contacts[recordID] = Record(recordID, SN, GN, PEM, WEM, PPH, WPH, SA, CITY, STP, CTY, PC)
         else:
             print("Duplicate recordID")
             return None
@@ -72,7 +73,7 @@ def addRecord(username, recordID, SN = None, GN = None, PEM = None, WEM = None, 
         saveDatabase(users)
 
 def check(recordID, SN = None, GN = None, PEM = None, WEM = None, PPH = None,
-                WPH = None, SA = None, CITY = None, PC = None):
+                WPH = None, SA = None, CITY = None, STP = None, CTY= None, PC = None):
     """
     Validates Inputs to addRecord method
     """
@@ -85,7 +86,7 @@ def check(recordID, SN = None, GN = None, PEM = None, WEM = None, PPH = None,
         print("Invalid recordID")
         return False
 
-    fieldValue = [SN, GN, PEM, WEM, PPH, WPH, SA, CITY, PC]
+    fieldValue = [SN, GN, PEM, WEM, PPH, WPH, SA, CITY, STP, CTY, PC]
 
     for value in fieldValue:
         if value == None:
@@ -124,12 +125,12 @@ def deleteRecord(username, recordID):
     return None
     
 def editRecord(username, recordID, SN = None, GN = None, PEM = None, WEM = None, PPH = None,
-                WPH = None, SA = None, CITY = None, PC = None):
+                WPH = None, SA = None, CITY = None, STP = None, CTY= None, PC = None):
     """
     Edits a record from the given users contacts.
     """
 
-    if not check(recordID, SN, GN, PEM, WEM, PPH, WPH, SA, CITY, PC):
+    if not check(recordID, SN, GN, PEM, WEM, PPH, WPH, SA, CITY, STP, CTY, PC):
         return None
     else:
         users = openDatabase()
@@ -154,6 +155,10 @@ def editRecord(username, recordID, SN = None, GN = None, PEM = None, WEM = None,
             users[username].contacts[recordID].SA = SA
         if CITY != None:
             users[username].contacts[recordID].CITY = CITY
+        if STP != None:
+            users[username].contacts[recordID].STP = STP
+        if CTY != None:
+            users[username].contacts[recordID].CTY = CTY
         if PC != None:
             users[username].contacts[recordID].PC = PC
 
@@ -164,7 +169,7 @@ def editRecord(username, recordID, SN = None, GN = None, PEM = None, WEM = None,
     return None
 
 def readRecord(username, recordID, SN = None, GN = None, PEM = None, WEM = None, PPH = None,
-                WPH = None, SA = None, CITY = None, PC = None):
+                WPH = None, SA = None, CITY = None, STP = None, CTY= None, PC = None):
     """
     Prints the requested information to the user about th record of interest.
     """
@@ -176,8 +181,8 @@ def readRecord(username, recordID, SN = None, GN = None, PEM = None, WEM = None,
         print("Invalid recordID")
         return None
 
-    fieldValues = [SN, GN, PEM, WEM, PPH, WPH, SA, CITY, PC]
-    accecptedFieldValues = ['SN', 'GN', 'PEM', 'WEM', 'PPH', 'WPH', 'SA', 'CITY', 'PC', None]
+    fieldValues = [SN, GN, PEM, WEM, PPH, WPH, SA, CITY, STP, CTY, PC]
+    accecptedFieldValues = ['SN', 'GN', 'PEM', 'WEM', 'PPH', 'WPH', 'SA', 'CITY', 'STP', 'CTY', 'PC', None]
 
     for value in fieldValues:
         if value not in accecptedFieldValues:
@@ -202,6 +207,7 @@ def readRecord(username, recordID, SN = None, GN = None, PEM = None, WEM = None,
                         + ' PEM=' + exist(users[username].contacts[recordID].PEM) + ' WEM=' + exist(users[username].contacts[recordID].WEM)
                         + ' PPH=' + exist(users[username].contacts[recordID].PPH) + ' WPH=' + exist(users[username].contacts[recordID].WPH)
                         + ' SA=' + exist(users[username].contacts[recordID].SA) + ' CITY=' + exist(users[username].contacts[recordID].CITY)
+                        + ' STP=' + exist(users[username].contacts[recordID].STP)+ ' CTY=' + exist(users[username].contacts[recordID].CTY)
                         + ' PC=' + exist(users[username].contacts[recordID].PC) )
 
     else:
@@ -224,6 +230,10 @@ def readRecord(username, recordID, SN = None, GN = None, PEM = None, WEM = None,
                 output = output + ' SA=' + users[username].contacts[recordID].SA
             if value == 'CITY':
                 output = output + ' CITY=' + users[username].contacts[recordID].CITY
+            if value == 'STP':
+                output = output + ' STP=' + users[username].contacts[recordID].STP
+            if value == 'CTY':
+                output = output + ' CTY=' + users[username].contacts[recordID].CTY
             if value == 'PC':
                 output = output + ' PC=' + users[username].contacts[recordID].PC
 
@@ -245,6 +255,52 @@ def importDatabase(username, filename):
     """
     Imports the database of contacts in the form of a csv
     """
+
+    if filename == '':
+        print("No Input_file specified")
+        return None
+    
+    try:
+        f = open(filename, 'r')
+    except OSError:
+        print("Can't open Input_file")
+        return None
+
+    if '.csv' not in filename:
+        print("Input_file invalid format")
+        return None
+
+    with f:
+
+        users = openDatabase()
+
+        if users.get(username, None) == None:
+            users[username] = User(username)
+
+        reader = csv.reader(f)
+
+        totalLines = 0
+        for row in reader:
+
+            if users[username].contacts.get(row[0], None) != None:
+                print("Duplicate recordID")
+                users.pop(username)
+                return None
+
+            if totalLines == 256:
+                print("Number of records exceeds maximum")
+                users.pop(username)
+                return None
+            
+            newRecord = Record(row[0], row[1], row[2], row[3], row[4], row[5], row[6],
+                            row[7], row[8], row[9], row[10], row[11])
+
+            users[username].contacts[row[0]] = newRecord
+
+
+        saveDatabase(users)
+
+    return None
 
 def exportDatabase(username, filename):
     """
