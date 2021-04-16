@@ -4,6 +4,7 @@
 #PLEASE READ: Before intial use need to create database via datacom.UserDatabase()
 
 import pickle
+import authentication
 
 class UserDatabase:
     """
