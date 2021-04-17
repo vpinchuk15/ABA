@@ -39,66 +39,32 @@ def runSession():
             if command == "HLP":
                 print("Add help stuff here")
             else:
-                print("Need to login to access other commands.")
+                print("Need to login to access other commands or command is not valid.")
         
+        elif session.access == 2:
+            if command == "ADU":
+                continue
+            if command == "DEU":
+                continue
+            if command == "DAL":
+                continue
+            if command == "LOUT":
+                continue
         else:
-            continue
-            #we are logged in access to differnt commands oka
-
-def processCommand(command, parameter, userID):
-    good = "OK"         #REPLACE AFTER IMPLEMENTING FUNCTIONS
-    bad = "Invalid"     #REPLACE AFTER IMPLEMENTING FUNCTIONS
-    
-
-    if userID == None:
-        if(command == "LIN"):
-            #login(parameter)
-            return good
-        else:
-            print("Must log in first.")
-            return bad        
-    else:
-        if(command == "LOUT"):
-            #logout()
-            return good
-        elif (command == "CHP"):
-            #changePassword(parameter)
-            return good
-        elif(command in ["ADU", "DEU", "DAL"]): #Admin-Only Commands
-            if(userID == "admin"):
-                if (command == "ADU"):
-                    #addUser(parameter)
-                    pass
-                elif (command == "DEU"):
-                    #deleteUser(parameter)
-                    pass
-                elif (command == "DAL"):
-                    #displayAuditLog(parameter)
-                    pass
-                return good
+            if command == "ADR":
+                continue
+            elif command == "DER":
+                continue
+            elif command == "EDR":
+                continue
+            elif command == "RER":
+                continue
+            elif command == "IMD":
+                continue
+            elif command == "EXD":
+                continue
             else:
-                print("Unauthorized to access admin commands")
-                return bad    
-        elif (command == "ADR"):
-            #addRecord(parameter)
-            return good
-        elif (command == "Delete Record"):
-            #deleteRecord()
-            return good
-        elif (command == "Get Record"):
-            #getRecord()
-            return good
-        elif (command == "Import database"):
-            #importDatabase()
-            return good
-        elif (command == "Export database"):
-            #exportDatabase
-            return good
-        elif (command == "Help"):
-            #display commands
-            return good
-        else:
-            print("Invalid Command. Type \"HLP\" for a list of valid commands and their syntax \nor type \"Help [<command name>]\" for the command syntax of a specific command.")
+                print("Command is not valid.")
 
 if __name__ == "__main__":
     runSession()
