@@ -306,6 +306,38 @@ def exportDatabase(username, filename):
     """
     Exports a users database in the form of a csv
     """
+    users = openDatabase()
+
+    if filename == '':
+        print("No Output_file specified")
+        return None
+    
+    try:
+        f = open(filename, 'w')
+    except OSError:
+        print("Can't open Output_file")
+        return None
+
+    strings = []
+    for contact in users[username].contacts:
+        output = ''
+        output = (output + users[username].contacts[contact].recordID + ',' + users[username].contacts[contact].SN + ',' 
+                    + users[username].contacts[contact].GN + ',' + users[username].contacts[contact].PEM + ',' 
+                    + users[username].contacts[contact].WEM + ',' + users[username].contacts[contact].PPH + ',' 
+                    + users[username].contacts[contact].WPH + ',' + users[username].contacts[contact].SA + ',' 
+                    + users[username].contacts[contact].CITY + ',' + users[username].contacts[contact].STP + ','
+                    + users[username].contacts[contact].CTY + ',' + users[username].contacts[contact].PC)
+        strings.append(output)
+
+    try:
+        f.writelines(strings)
+    except:
+        print("Error writing Output_file")
+        return None
+    
+    print("OK")
+    return None
+
 
 def openDatabase():
     """
