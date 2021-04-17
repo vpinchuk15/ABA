@@ -3,8 +3,6 @@
 #Date: Updated: April 15, 2021
 #Login file is called = Login.txt
 
-import refmonitor
-
 def login(userID):
     """
     Part of the code retrieved:
