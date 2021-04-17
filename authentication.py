@@ -49,7 +49,7 @@ def login(actualUser):
     
     file.close()
 
-def logout():
+def logout(userID):
     with open('Login.txt', 'w+') as file:
         for line in file:
             username, _, status = line.split(',')
@@ -62,7 +62,7 @@ def logout():
     file.close()
 
 
-def changePassword(oldPW):
+def changePassword(oldPW,userID):
     with open('Login.txt', 'w+') as file:
         for line in file:
             username, password, status = line.split(',')
