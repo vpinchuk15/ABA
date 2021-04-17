@@ -13,12 +13,15 @@ class UserDatabase:
     def __init__(self):
         self.users = {}
         
-        open("datacomFile.txt", "x")
-        with open("datacomFile.txt", "wb") as f:
-            pickle.dump(self.users, f)
+        try:
+            open("datacomFile.txt", "x")
+            with open("datacomFile.txt", "wb") as f:
+                pickle.dump(self.users, f)
 
-        f.close()
-        
+            f.close()
+        except FileExistsError:
+            return None
+            
 class User:
     """
     A class that stores the information of the given user.
