@@ -3,6 +3,8 @@
 #Date: Updated: April 15, 2021
 #Login file is called = Login.txt
 
+import refmonitor
+
 def login(actualUser):
     """
     Part of the code retrieved:
@@ -44,11 +46,43 @@ def login(actualUser):
                 else:
                     #Case 2
                     return ("Invalid credentials.")
+    
+    file.close()
 
 def logout():
-    #TODO: Logout and possibly save in logs? Put 0 status
-    pass
+    with open('Login.txt', 'w+') as file:
+        for line in file:
+            username, _, status = line.split(',')
+            if username == userID:
+                if status == "1":
+                    status = "0"
+                    return ("Ok")
+                else:
+                    return ("No active login session.")
+    file.close()
 
-def changePassword():
-    #TODO: Change password in database?
-    pass
+
+def changePassword(oldPW):
+    with open('Login.txt', 'w+') as file:
+        for line in file:
+            username, password, status = line.split(',')
+            if username == userID:
+                if status == "1":
+                    if oldPW == password:
+                        newPassword = input("This is the first time the account is being used. You must create a new password.\nPasswords may contain 1-24 upper- or lower-case letters or numbers. Choose an uncommon password that would be difficult to guess.")
+                        if (len(newPassword) < 25 and len(newPassword) > 0 and newPassword.isalnum() and (newPassword.isnumeric() or newPassword.isalpha())):
+                            return ("Password is too easy to guess.")
+                        elif (len(newPassword) < 25 and len(newPassword) > 0 and newPassword.isalnum()):
+                            checkNew = input("Reenter the same password: ")
+                            if (checkNew == newPassword):
+                                file.write(userID + "," + newPassword + ",1" +'\n')
+                                return ("Ok.")
+                            else:
+                                return ("Passwords do not match.")
+                        else:
+                            return ("Password contains illegal characters.")
+                    else:
+                        return ("Invalid credentials.")
+                else:
+                    return ("No active login session.")
+    file.close()
