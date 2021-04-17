@@ -3,7 +3,7 @@
 #Date: Updated: April 16, 2021
 
 def Session():
-    userID = None
+    global userID = None
     command = None
     parameter = None
     version = 0.1
@@ -88,5 +88,6 @@ def processCommand(command, parameter, userID):
         else:
             print("Invalid Command. Type \"HLP\" for a list of valid commands and their syntax \nor type \"Help [<command name>]\" for the command syntax of a specific command.")
 
-
+def getUserID():
+    return userID
 
