@@ -75,7 +75,7 @@ def changePassword(oldPW,userID):
                         elif (len(newPassword) < 25 and len(newPassword) > 0 and newPassword.isalnum()):
                             checkNew = input("Reenter the same password: ")
                             if (checkNew == newPassword):
-                                file.write(userID + "," + newPassword + ",1" +'\n')
+                                password = checkNew
                                 return ("Ok.")
                             else:
                                 return ("Passwords do not match.")
