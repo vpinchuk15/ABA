@@ -5,7 +5,7 @@
 
 import refmonitor
 
-def login(actualUser):
+def login(userID):
     """
     Part of the code retrieved:
     https://stackoverflow.com/questions/46747524/creating-a-login-program-that-recalls-information-from-text-files
@@ -19,7 +19,7 @@ def login(actualUser):
         for line in file:
             username, password, status = line.split(',')
             #Check the username against the one supplied
-            if username == actualUser:
+            if username == userID:
                 #Case 4
                 if (actualPass == ""):
                     newPassword = input("This is the first time the account is being used. You must create a new password.\nPasswords may contain 1-24 upper- or lower-case letters or numbers. Choose an uncommon password that would be difficult to guess.")
@@ -28,7 +28,7 @@ def login(actualUser):
                     elif (len(newPassword) < 25 and len(newPassword) > 0 and newPassword.isalnum()):
                         checkNew = input("Reenter the same password: ")
                         if (checkNew == newPassword):
-                            file.write(actualUser + "," + newPassword + ",1" +'\n')
+                            file.write(userID + "," + newPassword + ",1" +'\n')
                             return ("Ok.")
                         else:
                             return ("Passwords do not match.")
