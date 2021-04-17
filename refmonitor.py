@@ -2,8 +2,10 @@
 #Author: Dominic Santilla
 #Date: Updated: April 16, 2021
 
+
 def Session():
-    global userID = None
+    global userID
+    userID = None
     command = None
     parameter = None
     version = 0.1
