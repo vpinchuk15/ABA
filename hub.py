@@ -1,14 +1,27 @@
 #ABA Module: HUB
-#Author: Nathan Shah
-#Date: Updated: April 16, 2021
+#Authors: Dominic Santilla, Nathan Shah
+#Date: Updated: April 17, 2021
 
 import datacom
+import authentication
 
 class Session:
 
     def __init__(self):
         self.username = None
-        self.access = None
+        self.access = 0
+
+    def getUsername(self):
+        return self.username
+
+    def getAccess(self):
+        return self.access
+
+    def setUsername(self, userID):
+        self.username = userID
+    
+    def setAccess(self, access_level):
+        self.access = access_level
 
 def runSession():
 
@@ -21,17 +34,26 @@ def runSession():
     while(True):
         command_str = input("Enter Command>")
 
-        command = command_str[:3]
-
+        command_str.split(";")
+        command = command_str[0]
+        exit_code = None
         if session.username == None:
             if command == 'EXT':
                 exit()
             
             if command == "LIN":
-                if session.username != None:
+                if session.getUsername() != None:
                     print("Already logged in.")
                 else:
-                    continue
+                    exit_code = authentication.login(command_str[1])
+                    if(exit_code == 'Ok.'):
+                        session.setUsername(command_str[1])
+                        if(session.getUsername() == "admin"):
+                            session.setAccess = 2
+                        else:
+                            session.setAccess = 1
+                    else:
+                        print(exit_code)
                 #send to login
                 #if good then change seesion.usernme = username
                 #session.access = 1 (User Level) if 2 (admin level)
@@ -41,6 +63,18 @@ def runSession():
             else:
                 print("Need to login to access other commands or command is not valid.")
         
+        elif command == "LOU":
+            exit_code = authentication.logout(session.getUsername())
+            if(exit_code == "Ok"):
+                session.setUsername(None)
+                session.setAccess(0)
+            else:
+                print(exit_code)
+        elif command == "CHP":
+
+            exit_code = authentication.changePassword(command_str[2], session.getUsername())
+            if(exit_code != "Ok."):
+                print(exit_code)
         elif session.access == 2:
             if command == "ADU":
                 continue
@@ -48,10 +82,9 @@ def runSession():
                 continue
             if command == "DAL":
                 continue
-            if command == "LOUT":
-                continue
         else:
             if command == "ADR":
+                #difficulty parsing command line and sending as parameters. Maybe simply send all tokens and parse within AddRecord function?
                 continue
             elif command == "DER":
                 continue
@@ -65,6 +98,7 @@ def runSession():
                 continue
             else:
                 print("Command is not valid.")
+
 
 if __name__ == "__main__":
     runSession()
