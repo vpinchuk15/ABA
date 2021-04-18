@@ -9,8 +9,8 @@ import auditLog
 class Session:
 
     def __init__(self):
-        self.username = None
-        self.access = 0
+        self.username = 'admin'
+        self.access = 2
 
     def getUsername(self):
         return self.username
