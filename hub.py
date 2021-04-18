@@ -30,6 +30,7 @@ def runSession():
     session = Session()
 
     datacom.UserDatabase()
+    auditLog.AuditLog()
     #create oter classes for the other modules
 
     while(True):
