@@ -8,7 +8,7 @@ import authentication
 class Session:
 
     def __init__(self):
-        self.username = None
+        self.username = 'Hello'
         self.access = 0
 
     def getUsername(self):
@@ -34,8 +34,9 @@ def runSession():
     while(True):
         command_str = input("Enter Command>")
 
-        command_str.split(";")
-        command = command_str[0]
+        command = command_str[:3]
+        fieldValues = command_str[3:]
+        
         exit_code = None
         if session.username == None:
             if command == 'EXT':
@@ -84,7 +85,9 @@ def runSession():
                 continue
         else:
             if command == "ADR":
-                #difficulty parsing command line and sending as parameters. Maybe simply send all tokens and parse within AddRecord function?
+                fv = parse(fieldValues)
+                datacom.addRecord(session.getUsername(), fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
+                                    fv[9], fv[10], fv[11] )
                 continue
             elif command == "DER":
                 continue
@@ -99,6 +102,44 @@ def runSession():
             else:
                 print("Command is not valid.")
 
+def parse(fieldValues):
+    """
+    Creates values for entry into ADR, EDR
+    """
+    cleaned = ['']*12
+
+    if len(fieldValues) == 0:
+        return cleaned
+        
+    output = [s for s in fieldValues.split('"') if s.strip() != '']
+
+    for i in range(1,len(output),2):
+        if output[i] == 'SN=':
+            cleaned[1] = output[i+1]
+        elif output[i] == 'GN=':
+            cleaned[2] = output[i+1]
+        elif output[i] == 'PEM=':
+            cleaned[3] = output[i+1]
+        elif output[i] == 'WEM=':
+            cleaned[4] = output[i+1]
+        elif output[i] == 'PPH=':
+            cleaned[5] = output[i+1]
+        elif output[i] == 'WPH=':
+            cleaned[6] = output[i+1]
+        elif output[i] == 'SA=':
+            cleaned[7] = output[i+1]
+        elif output[i] == 'CITY=':
+            cleaned[8] = output[i+1]
+        elif output[i] == 'STP=':
+            cleaned[9] = output[i+1]
+        elif output[i] == 'CTY=':
+            cleaned[10] = output[i+1]
+        elif output[i] == 'PC=':
+            cleaned[11] = output[i+1]
+        else:
+            continue
+    
+    return cleaned
 
 if __name__ == "__main__":
     runSession()
