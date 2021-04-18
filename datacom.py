@@ -359,8 +359,3 @@ def saveDatabase(users):
     f.close()
 
     return None
-
-def parse(commands):
-    """
-    Parse commands
-    """
