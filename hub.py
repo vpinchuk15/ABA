@@ -8,7 +8,7 @@ import authentication
 class Session:
 
     def __init__(self):
-        self.username = 'Hello'
+        self.username = None
         self.access = 0
 
     def getUsername(self):
