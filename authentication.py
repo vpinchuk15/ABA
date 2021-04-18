@@ -27,7 +27,7 @@ def login(userID):
                         checkNew = input("Reenter the same password: ")
                         if (checkNew == newPassword):
                             file.write(userID + "," + newPassword + ",1" +'\n')
-                            return ("Ok.")
+                            return ("OK (L1)")
                         else:
                             return ("Passwords do not match.")
                     else:
@@ -40,7 +40,7 @@ def login(userID):
                         return ("An account is currently active; logout before proceeding.")
                     else:
                         #Case 3
-                        return True
+                        return ("OK")
                 else:
                     #Case 2
                     return ("Invalid credentials.")
@@ -54,7 +54,7 @@ def logout(userID):
             if username == userID:
                 if status == "1":
                     status = "0"
-                    return ("Ok")
+                    return ("OK")
                 else:
                     return ("No active login session.")
     file.close()
@@ -74,7 +74,7 @@ def changePassword(oldPW,userID):
                             checkNew = input("Reenter the same password: ")
                             if (checkNew == newPassword):
                                 password = checkNew
-                                return ("Ok.")
+                                return ("OK")
                             else:
                                 return ("Passwords do not match.")
                         else:

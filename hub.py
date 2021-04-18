@@ -4,6 +4,7 @@
 
 import datacom
 import authentication
+import auditLog
 
 class Session:
 
@@ -35,54 +36,69 @@ def runSession():
         command_str = input("Enter Command>")
 
         command = command_str[:3]
+
         fieldValues = command_str[3:]
         
         exit_code = None
-        if session.username == None:
-            if command == 'EXT':
+        if command == 'EXT':
+                print("OK")
                 exit()
-            
+        elif session.getUsername() == None:  
             if command == "LIN":
-                if session.getUsername() != None:
-                    print("Already logged in.")
-                else:
-                    exit_code = authentication.login(command_str[1])
-                    if(exit_code == 'Ok.'):
-                        session.setUsername(command_str[1])
-                        if(session.getUsername() == "admin"):
-                            session.setAccess = 2
-                        else:
-                            session.setAccess = 1
+                exit_code = authentication.login(fieldValues)
+                if(exit_code == "OK" or exit_code == "OK (L1)"):
+                    session.setUsername(fieldValues)
+                    if(session.getUsername() == "admin"):
+                        session.setAccess = 2
                     else:
-                        print(exit_code)
+                        session.setAccess = 1
+                    if(exit_code == "OK (L1)"):
+                        auditLog.addLog("L1", session.getUsername())
+                    auditLog.addLog("LS", session.getUsername())
+                    print("OK")
+                else:
+                    auditLog.addLog("LF", fieldValues)
+                    print(exit_code)
                 #send to login
                 #if good then change seesion.usernme = username
                 #session.access = 1 (User Level) if 2 (admin level)
 
-            if command == "HLP":
+            elif command == "HLP":
                 print("Add help stuff here")
             else:
                 print("Need to login to access other commands or command is not valid.")
-        
+        elif command == "LIN":
+            print("Already logged in.")
         elif command == "LOU":
             exit_code = authentication.logout(session.getUsername())
             if(exit_code == "Ok"):
                 session.setUsername(None)
                 session.setAccess(0)
+                print("OK")
             else:
                 print(exit_code)
         elif command == "CHP":
 
             exit_code = authentication.changePassword(command_str[2], session.getUsername())
-            if(exit_code != "Ok."):
+            if(exit_code == "Ok."):
+                auditLog.addLog("SPC", session.getUsername())
+                print("OK")
+            else:
+                auditLog.addLog("FPC", session.getUsername())
                 print(exit_code)
+            
         elif session.access == 2:
             if command == "ADU":
-                continue
-            if command == "DEU":
-                continue
-            if command == "DAL":
-                continue
+                auditLog.addLog("AU", session.getUsername())
+            elif command == "DEU":
+                auditLog.addLog("DU", session.getUsername())
+            elif command == "DAL":
+                if(len(fieldValues) > 0):
+                    auditLog.displayLog(fieldValues)
+                else:
+                    auditLog.displayLog()
+            else:
+                print("Command is not valid.")
         else:
             if command == "ADR":
                 fv = parse(fieldValues)
@@ -111,8 +127,6 @@ def runSession():
                 fv = parse2(fieldValues)
                 datacom.exportDatabase(session.getUsername(),fv)
                 continue
-            elif command == 'EXT':
-                exit()
             else:
                 print("Command is not valid.")
 

@@ -1,5 +1,5 @@
 #ABA Module: Audit Log
-#Author: Nathan Shah
+#Author: Nathan Shah, Dominic Santilla
 #Date: Updated: April 15, 2021
 #PLEASE READ: Before intial use need to create database via auditlog.AuditLog()
 
@@ -34,6 +34,18 @@ class Record:
         self.recordType = recordType
         self.userID = userID
 
+    def getDate(self):
+        return self.date
+    
+    def getTime(self):
+        return self.time
+
+    def getType(self):
+        return self.recordType
+
+    def getID(self):
+        return self.userID
+
 def addLog(recordType, userID):
     """
     Adds record to the log
@@ -46,14 +58,15 @@ def addLog(recordType, userID):
 
     return None
 
-def displayLog():
+def displayLog(specified_ID = None):
     """
     Displays the log and log entries
     """
     log = openLog()
 
     for record in log:
-        print("%s, %s, %s, %s" %(record.date, record.time, record.recordType, record.userID))
+        if specified_ID == None or record.getID() == specified_ID:
+            print("%s, %s, %s, %s" %(record.getDate(), record.getTime(), record.getType(), record.getID()))
 
     return None
     
