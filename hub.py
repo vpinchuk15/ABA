@@ -67,7 +67,7 @@ def runSession():
                 #if good then change seesion.usernme = username
                 #session.access = 1 (User Level) if 2 (admin level)
             else:
-                print("Need to login to access other commands or command is not valid.")
+                print("No Active Login Session.")
         elif command == "LIN":
             print("Already logged in.")
         elif command == "LOU":
@@ -94,6 +94,8 @@ def runSession():
                     auditLog.displayLog(fieldValues)
                 else:
                     auditLog.displayLog()
+            elif command in ["ADR", "DER", "EDR", "RER", "IMD", "EXD"]:
+                print("Admin not authorized")
             else:
                 print("Command is not valid.")
         else:
