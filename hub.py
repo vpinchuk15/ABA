@@ -46,6 +46,8 @@ def runSession():
                 if(session.getUsername != None):
                     authentication.logout(session.getUsername())
                 exit()
+        elif command == "HLP":
+            print(showHelp(fieldValues))
         elif session.getUsername() == None:  
             if command == "LIN":
                 exit_code = authentication.login(fieldValues)
@@ -64,9 +66,6 @@ def runSession():
                 #send to login
                 #if good then change seesion.usernme = username
                 #session.access = 1 (User Level) if 2 (admin level)
-
-            elif command == "HLP":
-                print("Add help stuff here")
             else:
                 print("Need to login to access other commands or command is not valid.")
         elif command == "LIN":
@@ -211,6 +210,36 @@ def parse3(fieldValues):
 
     return cleaned
 
+def showHelp(command):
+    if(command == "" or command == "LIN"):
+        print("LIN <userID>")
+    if(command == "" or command == "LOU"):
+        print("LOU")
+    if(command == "" or command == "CHP"):
+        print("CHP <old password>")
+    if(command == "" or command == "ADU"):
+        print("ADU <userID>")
+    if(command == "" or command == "DEU"):
+        print("DEU <userID>")
+    if(command == "" or command == "DAL"):
+        print("DAL [<userID>]")
+    if(command == "" or command == "ADR"):
+        print("ADR <recordID> [<field1=value1> <field2=value2> ...]")
+    if(command == "" or command == "DER"):
+        print("DER <recordID>")
+    if(command == "" or command == "EDR"):
+        print("EDR <recordID> <field1=value1> [<field2=value2> ...]")
+    if(command == "" or command == "RER"):
+        print("RER [<recordID>] [<fieldname> ...]")
+    if(command == "" or command == "IMD"):
+        print("IMD <Input_File>")
+    if(command == "" or command == "EXD"):
+        print("EXD <Output_file>")
+    if(command == "" or command == "HLP"):
+        print("HLP [<command name>]")
+    if(command == "" or command == "EXT"):
+        print("EXT")
+    return "OK"
 if __name__ == "__main__":
     runSession()
 
