@@ -5,6 +5,7 @@
 import datacom
 import authentication
 import auditLog
+import adminActions
 
 class Session:
 
@@ -60,9 +61,10 @@ def runSession():
                     if(exit_code == "OK (L1)"):
                         auditLog.addLog("L1", session.getUsername())
                     auditLog.addLog("LS", session.getUsername())
+                    print("OK")
                 else:
                     auditLog.addLog("LF", fieldValues)
-                print(exit_code)
+                    print(exit_code)
                 #send to login
                 #if good then change seesion.usernme = username
                 #session.access = 1 (User Level) if 2 (admin level)
@@ -86,9 +88,15 @@ def runSession():
             
         elif session.getAccess() == 2:
             if command == "ADU":
-                auditLog.addLog("AU", session.getUsername())
+                exit_code = adminActions.addUser(fieldValues)
+                print(exit_code)
+                if exit_code == "OK":
+                    auditLog.addLog("AU", session.getUsername())
             elif command == "DEU":
-                auditLog.addLog("DU", session.getUsername())
+                exit_code = adminActions.deleteUser(fieldValues)
+                print(exit_code)
+                if exit_code == "OK":
+                    auditLog.addLog("DU", session.getUsername())
             elif command == "DAL":
                 if(len(fieldValues) > 0):
                     auditLog.displayLog(fieldValues)
@@ -99,6 +107,8 @@ def runSession():
             else:
                 print("Command is not valid.")
         else:
+            if command in ["ADU", "DEU", "DAL"]:
+                print("Admin not active")
             if command == "ADR":
                 fv = parse(fieldValues)
                 datacom.addRecord(session.getUsername(), fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
