@@ -46,13 +46,13 @@ def login(userID):
             print("Passwords do not match.")
             return False, 'LF'
         
-        if not password.isascii():
+        if not password.isascii() and password.isalnum():
             print("Password contains illegal characters.")
-            return False, 'LF'
+            return False, 'FPC'
 
-        if password.isalpha() or password.isdigit() or password.isalnum():
+        if  password.isalpha() or password.isdigit():
             print("Password is too easy to guess.")
-            return False, 'LF'
+            return False, 'FPC'
 
         table[userID] = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
 
