@@ -19,7 +19,7 @@ def login(userID):
             #Check the username against the one supplied
             if username == userID:
                 #Case 4
-                if (actualPass == ""):
+                if (password == ""):
                     newPassword = input("This is the first time the account is being used. You must create a new password.\nPasswords may contain 1-24 upper- or lower-case letters or numbers. Choose an uncommon password that would be difficult to guess.")
                     if (len(newPassword) < 25 and len(newPassword) > 0 and newPassword.isalnum() and (newPassword.isnumeric() or newPassword.isalpha())):
                         return ("Password is too easy to guess.")
