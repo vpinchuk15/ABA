@@ -166,7 +166,16 @@ def parse(fieldValues):
     if len(fieldValues) == 0:
         return cleaned
     else:
-        output = [s for s in fieldValues.split('"') if s.strip() != '']
+        outputA = [s for s in fieldValues.split('"') if s.strip() != '']
+
+        output = []
+        for val in outputA:
+            val = val.split()
+
+            for item in val:
+                output.append(item)
+
+
         cleaned[0] = output[0].strip()
 
     for i in range(1,len(output),2):
@@ -209,8 +218,16 @@ def parse3(fieldValues):
     if len(fieldValues) == 0:
         return cleaned
     else:
-        output = [s for s in fieldValues.split()]
-        cleaned[0] = output[0].lstrip()
+        outputA = [s for s in fieldValues.split()]
+
+        output = []
+        for val in outputA:
+            val = val.split()
+
+            for item in val:
+                output.append(item)
+
+        cleaned[0] = output[0].strip()
 
     for i in range(1,len(output),2):
         if output[i] == 'SN':
