@@ -1,5 +1,5 @@
 #ABA Module: Authentication Module
-#Author: Vladimir Pinchuk
+#Author: Vladimir Pinchuk, Dominic Santilla
 #Date: Updated: April 15, 2021
 #Login file is called = Login.txt
 
@@ -18,7 +18,7 @@ def login(userID):
         file.close()
         
         for i in range(len(lines)):
-            username, password, status = lines[i].split(',')
+            username, password, status = lines[i].strip().split(',')
             #Check the username against the one supplied
             if username == userID:
                 #Case 4
@@ -29,7 +29,7 @@ def login(userID):
                     elif (len(newPassword) < 25 and len(newPassword) > 0 and newPassword.isalnum()):
                         checkNew = input("Reenter the same password: ")
                         if (checkNew == newPassword):
-                            lines[i] = (userID + "," + newPassword + ",1")
+                            lines[i] = (userID + "," + newPassword + ",1\n")
                             newFile =open('Login.txt', 'w')
                             newFile.writelines(lines)
                             newFile.close()
@@ -46,7 +46,7 @@ def login(userID):
                         return ("An account is currently active; logout before proceeding.")
                     else:
                         #Case 3
-                        lines[i] = (username + "," + password + ",1")
+                        lines[i] = (username + "," + password + ",1\n")
                         newFile = open('Login.txt', 'w')
                         newFile.writelines(lines)
                         newFile.close()
@@ -63,10 +63,10 @@ def logout(userID):
         file.close()
         
         for i in range(len(lines)):
-            username, _, status = lines[i].split(',')
+            username, _, status = lines[i].strip().split(',')
             if username == userID:
                 if status == "1":
-                    lines[i] = (username + "," + _ + ",0")
+                    lines[i] = (username + "," + _ + ",0\n")
                     newFile = open('Login.txt', 'w')
                     newFile.writelines(lines)
                     newFile.close()
@@ -81,7 +81,7 @@ def changePassword(oldPW,userID):
         file.close()
         
         for i in range(len(lines)):
-            username, password, status = lines[i].split(',')
+            username, password, status = lines[i].strip().split(',')
             if username == userID:
                 if status == "1":
                     if oldPW == password:
@@ -92,7 +92,7 @@ def changePassword(oldPW,userID):
                             checkNew = input("Reenter the same password: ")
                             if (checkNew == newPassword):
                                 password = checkNew
-                                lines[i] = (username + "," + password + ",1")
+                                lines[i] = (username + "," + password + ",1\n")
                                 newFile = open('Login.txt', 'w')
                                 newFile.writelines(lines)
                                 newFile.close()
