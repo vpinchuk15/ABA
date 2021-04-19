@@ -56,20 +56,7 @@ def runSession():
                         print("Access NOT granted")
 
             elif command == "HLP":
-                print("Login: LIN userID")
-                print("Exit = EXT")
-                print("Logout = LOU")
-                print("Change Password = CHP userID")
-                print("Add User (Admin Only) = ADU userID")
-                print("Delete User (Admin Only) = DEU userID")
-                print("Display Audit Log (Admin Only) = DAL")
-                print("List Users (Admin Only) = LSU")
-                print("Add Record = ADR recordID fieldvalues")
-                print("Delete Record = DER recordID fieldvalues")
-                print("Edit Record = EDR recordID fieldvalues")
-                print("Read Record = RER recordID fieldvalues")
-                print("Import Database = IMD filename")
-                print("Export Database = EXD filename")
+                print(showHelp(fieldValues))
 
             else:
                 print("Need to login to access other commands or command is not valid.")
@@ -96,8 +83,10 @@ def runSession():
 
             
         elif session.access == 1:
-
-            if command == "ADU":
+            if command in ["ADR", "DER", "EDR", "RER", "IMD", "EXD"]:
+                print("Admin not authorized")
+                
+            elif command == "ADU":
                 login.addUser(fieldValues)
                 auditLog.addLog("AU", 'admin')
 
@@ -118,7 +107,10 @@ def runSession():
                 print("Command is not valid.")
         
         else:
-            if command == "ADR":
+            if command in ["ADU", "DEU", "DAL"]:
+                print("Admin not active")
+
+            elif command == "ADR":
                 fv = parse(fieldValues)
                 datacom.addRecord(session.username, fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
                                    fv[9], fv[10], fv[11] )
@@ -153,7 +145,6 @@ def runSession():
                 except:
                     print("No data to export.")
                 continue
-
             else:
                 print("Command is not valid.")
 
@@ -166,16 +157,7 @@ def parse(fieldValues):
     if len(fieldValues) == 0:
         return cleaned
     else:
-        outputA = [s for s in fieldValues.split('"') if s.strip() != '']
-
-        output = []
-        for val in outputA:
-            val = val.split()
-
-            for item in val:
-                output.append(item)
-
-
+        output = [s for s in fieldValues.split('"') if s.strip() != '']
         cleaned[0] = output[0].strip()
 
     for i in range(1,len(output),2):
@@ -218,16 +200,8 @@ def parse3(fieldValues):
     if len(fieldValues) == 0:
         return cleaned
     else:
-        outputA = [s for s in fieldValues.split()]
-
-        output = []
-        for val in outputA:
-            val = val.split()
-
-            for item in val:
-                output.append(item)
-
-        cleaned[0] = output[0].strip()
+        output = [s for s in fieldValues.split()]
+        cleaned[0] = output[0].lstrip()
 
     for i in range(1,len(output),2):
         if output[i] == 'SN':
@@ -256,6 +230,37 @@ def parse3(fieldValues):
             continue
 
     return cleaned
+
+def showHelp(command):
+    if(command == "" or command == "LIN"):
+        print("LIN <userID>")
+    if(command == "" or command == "LOU"):
+        print("LOU")
+    if(command == "" or command == "CHP"):
+        print("CHP <old password>")
+    if(command == "" or command == "ADU"):
+        print("ADU <userID>")
+    if(command == "" or command == "DEU"):
+        print("DEU <userID>")
+    if(command == "" or command == "DAL"):
+        print("DAL [<userID>]")
+    if(command == "" or command == "ADR"):
+        print("ADR <recordID> [<field1=value1> <field2=value2> ...]")
+    if(command == "" or command == "DER"):
+        print("DER <recordID>")
+    if(command == "" or command == "EDR"):
+        print("EDR <recordID> <field1=value1> [<field2=value2> ...]")
+    if(command == "" or command == "RER"):
+        print("RER [<recordID>] [<fieldname> ...]")
+    if(command == "" or command == "IMD"):
+        print("IMD <Input_File>")
+    if(command == "" or command == "EXD"):
+        print("EXD <Output_file>")
+    if(command == "" or command == "HLP"):
+        print("HLP [<command name>]")
+    if(command == "" or command == "EXT"):
+        print("EXT")
+    return "OK"
 
 if __name__ == "__main__":
     runSession()

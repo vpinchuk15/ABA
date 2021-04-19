@@ -3,7 +3,7 @@
 #Date: Updated: April 17, 2021
 
 import pickle
-import bcrypt #noqa
+import bcrypt
 
 
 class Login:
@@ -130,11 +130,11 @@ def changePassword(userID):
             print("Passwords do not match.")
             return False, 'FPC'
         
-        if not password.isascii():
+        if not password.isascii() and password.isalnum():
             print("Password contains illegal characters.")
             return False, 'FPC'
 
-        if password.isalpha() or password.isdigit() or password.isalnum():
+        if  password.isalpha() or password.isdigit():
             print("Password is too easy to guess.")
             return False, 'FPC'
 
