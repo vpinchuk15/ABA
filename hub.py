@@ -117,7 +117,7 @@ def runSession():
         else:
             if command in ["ADU", "DEU", "DAL"]:
                 print("Admin not active")
-            if command == "ADR":
+            elif command == "ADR":
                 fv = parse(fieldValues)
                 datacom.addRecord(session.getUsername(), fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
                                    fv[9], fv[10], fv[11] )
