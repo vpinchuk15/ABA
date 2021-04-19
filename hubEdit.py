@@ -213,16 +213,22 @@ def parse(fieldValues):
     return cleaned
 
 def parse2(fieldValues):
-    output = fieldValues.split()
 
-    return output[0]
+    if len(fieldValues) > 0:
+        output = fieldValues.split()
+
+        return output[0]
+    else:
+        return ''
 
 def parse3(fieldValues):
 
     cleaned = [None]*12
 
     if len(fieldValues) == 0:
+        cleaned[0] = ''
         return cleaned
+
     else:
         outputA = [s for s in fieldValues.split('"') if s.strip() != '']
 
