@@ -83,7 +83,7 @@ def addUser(userID):
         print("Too many accounts.")
         return False, ''
 
-    if table.get(userID, None) != None:
+    if userID in table:
         print("Account already exists")
         return False, ''
     
