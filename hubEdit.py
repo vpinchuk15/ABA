@@ -22,7 +22,22 @@ def runSession():
     auditLog.AuditLog()
     login.Login()
     
-    while(True):
+    while True:
+        if login.checkStartup():
+            break
+        else:
+            print("First Time Startup. Create password for admin account.")
+            code,audit = login.login('admin')
+
+            if code:
+                session.username = 'admin'
+                session.access = 1
+                auditLog.addLog(audit,session.username)
+                break
+            else:
+                print("Try again. This is a necessay condition")
+
+    while True:
         print()
         command_str = input("Enter Command>")
 

@@ -35,7 +35,9 @@ def login(userID):
         return False,''
 
     if table[userID] == None:
-        print("This is the first time the account is being used. You must create a new password. Passwords may contain 1-24 upper- or lower-case letters or numbers. Choose an uncommon password that would be difficult to guess.")
+        print("This is the first time the account is being used.")
+        print("You must create a new password. Passwords may contain 1-24 upper- or lower-case letters or numbers.")
+        print("Choose an uncommon password that would be difficult to guess.")
 
         password = input("Enter Password:")
         password1 = input("Renter Password:")
@@ -181,3 +183,16 @@ def saveTable(table):
     f.close()
 
     return None
+
+def checkStartup():
+    """
+    Checks if the first startup
+    """
+
+    table = openTable()
+
+    if table['admin'] != None:
+        return True
+    
+    return False
+
