@@ -5,12 +5,13 @@
 import datacom
 import authentication
 import auditLog
+import adminActions
 
 class Session:
 
     def __init__(self):
-        self.username = 'admin'
-        self.access = 2
+        self.username = None
+        self.access = 0
 
     def getUsername(self):
         return self.username
@@ -26,33 +27,45 @@ class Session:
 
 def runSession():
 
-    print("Address Book Application, version "+ '0.1' + ". Type “HLP” for a list of commands.")
+    print("Address Book Application, version "+ '0.5' + ". Type “HLP” for a list of commands.")
     session = Session()
 
     datacom.UserDatabase()
     auditLog.AuditLog()
     #create oter classes for the other modules
-
+    if(authentication.checkStartup() == True):
+        print("First Time Startup. Create password for admin account.")
+        exit_code = authentication.login("admin")
+        if(exit_code == "OK (L1)"):
+            session.setUsername("admin")
+            session.setAccess(2)
+            auditLog.addLog("L1", session.getUsername())
+            auditLog.addLog("LS", session.getUsername())
+            print("OK")
     while(True):
         command_str = input("Enter Command>")
 
         command = command_str[:3]
 
-        fieldValues = command_str[3:]
+        fieldValues = command_str[4:]
         
         exit_code = None
         if command == 'EXT':
                 print("OK")
+                if(session.getUsername != None):
+                    authentication.logout(session.getUsername())
                 exit()
+        elif command == "HLP":
+            print(showHelp(fieldValues))
         elif session.getUsername() == None:  
             if command == "LIN":
                 exit_code = authentication.login(fieldValues)
                 if(exit_code == "OK" or exit_code == "OK (L1)"):
                     session.setUsername(fieldValues)
                     if(session.getUsername() == "admin"):
-                        session.setAccess = 2
+                        session.setAccess(2)
                     else:
-                        session.setAccess = 1
+                        session.setAccess(1)
                     if(exit_code == "OK (L1)"):
                         auditLog.addLog("L1", session.getUsername())
                     auditLog.addLog("LS", session.getUsername())
@@ -63,45 +76,48 @@ def runSession():
                 #send to login
                 #if good then change seesion.usernme = username
                 #session.access = 1 (User Level) if 2 (admin level)
-
-            elif command == "HLP":
-                print("Add help stuff here")
             else:
-                print("Need to login to access other commands or command is not valid.")
+                print("No Active Login Session.")
         elif command == "LIN":
             print("Already logged in.")
         elif command == "LOU":
             exit_code = authentication.logout(session.getUsername())
-            if(exit_code == "Ok"):
+            if(exit_code == "OK"):
                 session.setUsername(None)
                 session.setAccess(0)
-                print("OK")
-            else:
-                print(exit_code)
+            print(exit_code)
         elif command == "CHP":
-
-            exit_code = authentication.changePassword(command_str[2], session.getUsername())
-            if(exit_code == "Ok."):
+            exit_code = authentication.changePassword(fieldValues, session.getUsername())
+            if(exit_code == "OK"):
                 auditLog.addLog("SPC", session.getUsername())
-                print("OK")
             else:
                 auditLog.addLog("FPC", session.getUsername())
-                print(exit_code)
+            print(exit_code)
             
-        elif session.access == 2:
+        elif session.getAccess() == 2:
             if command == "ADU":
-                auditLog.addLog("AU", session.getUsername())
+                exit_code = adminActions.addUser(fieldValues)
+                print(exit_code)
+                if exit_code == "OK":
+                    auditLog.addLog("AU", session.getUsername())
             elif command == "DEU":
-                auditLog.addLog("DU", session.getUsername())
+                exit_code = adminActions.deleteUser(fieldValues)
+                print(exit_code)
+                if exit_code == "OK":
+                    auditLog.addLog("DU", session.getUsername())
             elif command == "DAL":
                 if(len(fieldValues) > 0):
                     auditLog.displayLog(fieldValues)
                 else:
                     auditLog.displayLog()
+            elif command in ["ADR", "DER", "EDR", "RER", "IMD", "EXD"]:
+                print("Admin not authorized")
             else:
                 print("Command is not valid.")
         else:
-            if command == "ADR":
+            if command in ["ADU", "DEU", "DAL"]:
+                print("Admin not active")
+            elif command == "ADR":
                 fv = parse(fieldValues)
                 datacom.addRecord(session.getUsername(), fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
                                    fv[9], fv[10], fv[11] )
@@ -214,6 +230,36 @@ def parse3(fieldValues):
 
     return cleaned
 
+def showHelp(command):
+    if(command == "" or command == "LIN"):
+        print("LIN <userID>")
+    if(command == "" or command == "LOU"):
+        print("LOU")
+    if(command == "" or command == "CHP"):
+        print("CHP <old password>")
+    if(command == "" or command == "ADU"):
+        print("ADU <userID>")
+    if(command == "" or command == "DEU"):
+        print("DEU <userID>")
+    if(command == "" or command == "DAL"):
+        print("DAL [<userID>]")
+    if(command == "" or command == "ADR"):
+        print("ADR <recordID> [<field1=value1> <field2=value2> ...]")
+    if(command == "" or command == "DER"):
+        print("DER <recordID>")
+    if(command == "" or command == "EDR"):
+        print("EDR <recordID> <field1=value1> [<field2=value2> ...]")
+    if(command == "" or command == "RER"):
+        print("RER [<recordID>] [<fieldname> ...]")
+    if(command == "" or command == "IMD"):
+        print("IMD <Input_File>")
+    if(command == "" or command == "EXD"):
+        print("EXD <Output_file>")
+    if(command == "" or command == "HLP"):
+        print("HLP [<command name>]")
+    if(command == "" or command == "EXT"):
+        print("EXT")
+    return "OK"
 if __name__ == "__main__":
     runSession()
 
