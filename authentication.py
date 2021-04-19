@@ -13,9 +13,12 @@ def login(userID):
     """
     logged_in = False
     
-    with open('Login.txt', 'w+') as file:
-        for line in file:
-            username, password, status = line.split(',')
+    with open('Login.txt', 'r') as file:
+        lines = file.readlines()
+        file.close()
+        
+        for i in range(len(lines)):
+            username, password, status = lines[i].split(',')
             #Check the username against the one supplied
             if username == userID:
                 #Case 4
@@ -26,7 +29,10 @@ def login(userID):
                     elif (len(newPassword) < 25 and len(newPassword) > 0 and newPassword.isalnum()):
                         checkNew = input("Reenter the same password: ")
                         if (checkNew == newPassword):
-                            file.write(userID + "," + newPassword + ",1" +'\n')
+                            lines[i] = (userID + "," + newPassword + ",1")
+                            newFile =open('Login.txt', 'w')
+                            newFile.writelines(lines)
+                            newFile.close()
                             return ("OK (L1)")
                         else:
                             return ("Passwords do not match.")
@@ -40,40 +46,56 @@ def login(userID):
                         return ("An account is currently active; logout before proceeding.")
                     else:
                         #Case 3
+                        lines[i] = (username + "," + password + ",1")
+                        newFile = open('Login.txt', 'w')
+                        newFile.writelines(lines)
+                        newFile.close()
                         return ("OK")
                 else:
                     #Case 2
                     return ("Invalid credentials.")
     
-    file.close()
+    
 
 def logout(userID):
-    with open('Login.txt', 'w+') as file:
-        for line in file:
-            username, _, status = line.split(',')
+    with open('Login.txt', 'r') as file:
+        lines = file.readlines()
+        file.close()
+        
+        for i in range(len(lines)):
+            username, _, status = lines[i].split(',')
             if username == userID:
                 if status == "1":
-                    status = "0"
+                    lines[i] = (username + "," + _ + ",0")
+                    newFile = open('Login.txt', 'w')
+                    newFile.writelines(lines)
+                    newFile.close()
                     return ("OK")
                 else:
                     return ("No active login session.")
-    file.close()
 
 
 def changePassword(oldPW,userID):
-    with open('Login.txt', 'w+') as file:
-        for line in file:
-            username, password, status = line.split(',')
+    with open('Login.txt', 'r') as file:
+        lines = file.readlines()
+        file.close()
+        
+        for i in range(len(lines)):
+            username, password, status = lines[i].split(',')
             if username == userID:
                 if status == "1":
                     if oldPW == password:
-                        newPassword = input("This is the first time the account is being used. You must create a new password.\nPasswords may contain 1-24 upper- or lower-case letters or numbers. Choose an uncommon password that would be difficult to guess.")
+                        newPassword = input("Create a new password.\nPasswords may contain 1-24 upper- or lower-case letters or numbers. Choose an uncommon password that would be difficult to guess.")
                         if (len(newPassword) < 25 and len(newPassword) > 0 and newPassword.isalnum() and (newPassword.isnumeric() or newPassword.isalpha())):
                             return ("Password is too easy to guess.")
                         elif (len(newPassword) < 25 and len(newPassword) > 0 and newPassword.isalnum()):
                             checkNew = input("Reenter the same password: ")
                             if (checkNew == newPassword):
                                 password = checkNew
+                                lines[i] = (username + "," + password + ",1")
+                                newFile = open('Login.txt', 'w')
+                                newFile.writelines(lines)
+                                newFile.close()
                                 return ("OK")
                             else:
                                 return ("Passwords do not match.")

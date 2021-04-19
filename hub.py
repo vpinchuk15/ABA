@@ -9,8 +9,8 @@ import auditLog
 class Session:
 
     def __init__(self):
-        self.username = 'admin'
-        self.access = 2
+        self.username = None
+        self.access = 0
 
     def getUsername(self):
         return self.username
@@ -38,11 +38,13 @@ def runSession():
 
         command = command_str[:3]
 
-        fieldValues = command_str[3:]
+        fieldValues = command_str[4:]
         
         exit_code = None
         if command == 'EXT':
                 print("OK")
+                if(session.getUsername != None):
+                    authentication.logout(session.getUsername())
                 exit()
         elif session.getUsername() == None:  
             if command == "LIN":
@@ -50,16 +52,15 @@ def runSession():
                 if(exit_code == "OK" or exit_code == "OK (L1)"):
                     session.setUsername(fieldValues)
                     if(session.getUsername() == "admin"):
-                        session.setAccess = 2
+                        session.setAccess(2)
                     else:
-                        session.setAccess = 1
+                        session.setAccess(1)
                     if(exit_code == "OK (L1)"):
                         auditLog.addLog("L1", session.getUsername())
                     auditLog.addLog("LS", session.getUsername())
-                    print("OK")
                 else:
                     auditLog.addLog("LF", fieldValues)
-                    print(exit_code)
+                print(exit_code)
                 #send to login
                 #if good then change seesion.usernme = username
                 #session.access = 1 (User Level) if 2 (admin level)
@@ -72,23 +73,19 @@ def runSession():
             print("Already logged in.")
         elif command == "LOU":
             exit_code = authentication.logout(session.getUsername())
-            if(exit_code == "Ok"):
+            if(exit_code == "OK"):
                 session.setUsername(None)
                 session.setAccess(0)
-                print("OK")
-            else:
-                print(exit_code)
+            print(exit_code)
         elif command == "CHP":
-
-            exit_code = authentication.changePassword(command_str[2], session.getUsername())
-            if(exit_code == "Ok."):
+            exit_code = authentication.changePassword(fieldValues, session.getUsername())
+            if(exit_code == "OK"):
                 auditLog.addLog("SPC", session.getUsername())
-                print("OK")
             else:
                 auditLog.addLog("FPC", session.getUsername())
-                print(exit_code)
+            print(exit_code)
             
-        elif session.access == 2:
+        elif session.getAccess() == 2:
             if command == "ADU":
                 auditLog.addLog("AU", session.getUsername())
             elif command == "DEU":
