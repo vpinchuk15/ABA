@@ -27,13 +27,21 @@ class Session:
 
 def runSession():
 
-    print("Address Book Application, version "+ '0.1' + ". Type “HLP” for a list of commands.")
+    print("Address Book Application, version "+ '0.5' + ". Type “HLP” for a list of commands.")
     session = Session()
 
     datacom.UserDatabase()
     auditLog.AuditLog()
     #create oter classes for the other modules
-
+    if(authentication.checkStartup() == True):
+        print("First Time Startup. Create password for admin account.")
+        exit_code = authentication.login("admin")
+        if(exit_code == "OK (L1)"):
+            session.setUsername("admin")
+            session.setAccess(2)
+            auditLog.addLog("L1", session.getUsername())
+            auditLog.addLog("LS", session.getUsername())
+            print("OK")
     while(True):
         command_str = input("Enter Command>")
 

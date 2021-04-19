@@ -114,3 +114,13 @@ def changePassword(oldPW,userID):
                 else:
                     return ("No active login session.")
     file.close()
+
+def checkStartup():
+    with open('Login.txt', 'r') as file:
+        line = file.readline()
+        file.close()
+        if(line == "admin,,0"):
+            return True
+        else:
+            return False
+        
