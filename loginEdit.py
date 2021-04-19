@@ -103,7 +103,7 @@ def deleteUser(userID):
         print("Invalid UserID")
         return False, ''
 
-    if table.get(userID, None) == None:
+    if userID not in table:
         print("Account does not exists")
         return False, ''
 
