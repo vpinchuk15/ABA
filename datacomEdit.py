@@ -27,7 +27,7 @@ class User:
     A class that stores the information of the given user.
     """
     def __init__(self, username):
-        self.username = username
+        self.username = username.strip()
         self.contacts = {}
 
 class Record:
@@ -59,14 +59,14 @@ def addRecord(username, recordID, SN = None, GN = None, PEM = None, WEM = None, 
     else:
         users = openDatabase()
 
-        if users.get(username, None) == None:
+        if username not in users:
             users[username] = User(username)
 
         if len(users[username].contacts) == 256:
             print("Number of records exceeds maximum")
             return None
         
-        if users[username].contacts.get(recordID, None) == None:
+        if recordID not in users[username].contacts:
             users[username].contacts[recordID] = Record(recordID, SN, GN, PEM, WEM, PPH, WPH, SA, CITY, STP, CTY, PC)
         else:
             print("Duplicate recordID")
@@ -107,6 +107,9 @@ def deleteRecord(username, recordID):
 
     users = openDatabase()
 
+    if username not in users:
+        users[username] = User(username)
+
     if recordID == '':
         print("No recordID")
         return None
@@ -115,7 +118,7 @@ def deleteRecord(username, recordID):
         print("Invalid recordID")
         return None
 
-    if users[username].contacts.get(recordID, None) == None:
+    if recordID not in users[username].contacts:
         print("RecordID not found")
         return None
     
@@ -138,7 +141,7 @@ def editRecord(username, recordID, SN = None, GN = None, PEM = None, WEM = None,
     else:
         users = openDatabase()
 
-        if users[username].contacts.get(recordID, None) == None:
+        if recordID not in users[username].contacts:
             print("RecordID not found")
             return None
 
@@ -194,7 +197,7 @@ def readRecord(username, recordID, SN = None, GN = None, PEM = None, WEM = None,
     
     users = openDatabase()
 
-    if users[username].contacts.get(recordID, None) == None:
+    if recordID not in users[username].contacts:
         print("RecordID not found")
         return None
                 
@@ -285,7 +288,7 @@ def importDatabase(username, filename):
         totalLines = 0
         for row in reader:
 
-            if users[username].contacts.get(row[0], None) != None:
+            if row[0] in users[username].contacts:
                 print("Duplicate recordID")
                 users.pop(username)
                 return None

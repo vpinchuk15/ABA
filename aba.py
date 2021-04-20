@@ -54,6 +54,10 @@ def runSession():
         elif session.username == None:  
             
             if command == "LIN":
+                if len(fieldValues) == 0:
+                    print("No userID given.")
+                    continue
+
                 code,audit = login.login(fieldValues)
 
                 if code:
@@ -175,6 +179,19 @@ def parse(fieldValues):
         outputA = [s for s in fieldValues.split('"') if s.strip() != '']
 
         output = []
+        if len(outputA) > 1:
+            outputB = outputA[0].split()
+            output.append(outputB[0])
+            output.append(outputB[1])
+
+            for i in range(2,len(outputA)+1):
+                output.append(outputA[i-1].strip())
+            cleaned[0] = output[0]
+        else:
+            cleaned[0] = outputA[0]
+        
+        
+        """output = []
         outputB = outputA[0].split()
         output.append(outputB[0])
         output.append(outputB[1])
@@ -182,7 +199,7 @@ def parse(fieldValues):
         for i in range(2,len(outputA)+1):
             output.append(outputA[i-1].strip())
 
-        cleaned[0] = output[0].strip()
+        cleaned[0] = output[0].strip()"""
 
     for i in range(1,len(output),2):
         if output[i] == 'SN=':
