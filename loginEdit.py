@@ -115,15 +115,17 @@ def deleteUser(userID):
     return True, 'DA'
 
 
-def changePassword(userID):
+def changePassword(userID, oldPassword):
     """
     Changes Password
     """
     table = openTable()
 
-    oldPassword = input("Enter old password:")
-    
     if bcrypt.checkpw(oldPassword.encode("utf-8"), table[userID]):
+
+        print("Create a new password. Passwords may contain up to 24")
+        print("upper- or lower-case letters or numbers. Choose an")
+        print("uncommon password that would be difficult to guess.")
         
         password = input("Enter New Password:")
         password1 = input("Renter New Password:")

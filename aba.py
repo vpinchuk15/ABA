@@ -91,7 +91,11 @@ def runSession():
             
         elif command == "CHP":
 
-            code,audit = login.changePassword(fieldValues)
+            if len(fieldValues) == 0:
+                print("Old password not given.")
+                continue
+
+            code,audit = login.changePassword(session.username,fieldValues)
 
             if code:
                 auditLog.addLog(audit,session.username)
