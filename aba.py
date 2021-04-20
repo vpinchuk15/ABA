@@ -46,11 +46,12 @@ def runSession():
         fieldValues = command_str[3:].strip()
         
         if command == 'EXT':
-                session.username = None
-                session.access = 0
-                print("OK")
-                exit()
-
+            session.username = None
+            session.access = 0
+            print("OK")
+            exit()
+        elif command == "HLP":
+            print(showHelp(fieldValues))
         elif session.username == None:  
             
             if command == "LIN":
@@ -74,8 +75,7 @@ def runSession():
                         auditLog.addLog(audit,fieldValues)
                         print("Access NOT granted")
 
-            elif command == "HLP":
-                print(showHelp(fieldValues))
+            
 
             else:
                 print("Need to login to access other commands or command is not valid.")
