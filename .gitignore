@@ -11,3 +11,14 @@ __pycache__/datacomEdit.cpython-37.pyc
 __pycache__/login.cpython-37.pyc
 __pycache__/loginEdit.cpython-37.pyc
 __pycache__/authentication.cpython-37.pyc
+adminActions.py
+auditLog.py
+authentication.py
+datacom.py
+hub.py
+Login.txt
+__pycache__/adminActions.cpython-37.pyc
+__pycache__/auditLog.cpython-37.pyc
+__pycache__/auditLog.cpython-37.pyc
+__pycache__/datacomEdit.cpython-38.pyc
+__pycache__/loginEdit.cpython-38.pyc
