@@ -37,17 +37,50 @@ class Record:
     def __init__(self, recordID, SN = None, GN = None, PEM = None, WEM = None, PPH = None,
                 WPH = None, SA = None, CITY = None, STP = None, CTY = None, PC = None):
         self.recordID = recordID
-        self.SN = SN
-        self.GN = GN
-        self.PEM = PEM
-        self.WEM = WEM
-        self.PPH = PPH
-        self.WPH = WPH
-        self.SA = SA
-        self.CITY = CITY
-        self.STP = STP
-        self.CTY = CTY
-        self.PC = PC
+        if SN == None: 
+            self.SN = '' 
+        else: 
+            self.SN = SN
+        if GN == None:
+            self.GN = ''
+        else:
+            self.GN = GN
+        if PEM == None:
+            self.PEM = ''
+        else:
+            self.PEM = PEM
+        if WEM == None:
+            self.WEM = ''
+        else:
+            self.WEM = WEM
+        if PPH == None:
+            self.PPH = ''
+        else:
+            self.PPH = PPH
+        if WPH == None:
+            self.WPH = ''
+        else:
+            self.WPH = WPH
+        if SA == None:
+            self.SA = ''
+        else:
+            self.SA = SA
+        if CITY == None:
+            self.CITY = ''
+        else:
+            self.CITY = CITY
+        if STP == None:
+            self.STP = ''
+        else:
+            self.STP = STP
+        if CTY == None:
+            self.CTY = ''
+        else:
+            self.CTY = CTY
+        if PC == None:
+            self.PC = ''
+        else:
+            self.PC = PC
 
 def addRecord(username, recordID, SN = None, GN = None, PEM = None, WEM = None, PPH = None,
                 WPH = None, SA = None, CITY = None, STP = None, CTY= None, PC = None):
@@ -332,7 +365,7 @@ def exportDatabase(username, filename):
                     + users[username].contacts[contact].WEM + ',' + users[username].contacts[contact].PPH + ',' 
                     + users[username].contacts[contact].WPH + ',' + users[username].contacts[contact].SA + ',' 
                     + users[username].contacts[contact].CITY + ',' + users[username].contacts[contact].STP + ','
-                    + users[username].contacts[contact].CTY + ',' + users[username].contacts[contact].PC)
+                    + users[username].contacts[contact].CTY + ',' + users[username].contacts[contact].PC) + '\n'
         strings.append(output)
 
     try:
