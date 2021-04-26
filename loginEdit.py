@@ -45,8 +45,9 @@ def login(userID):
         if password != password1:
             print("Passwords do not match.")
             return False, 'LF'
+
         
-        if not password.isascii() and password.isalnum():
+        if not password.isascii() and password.isalnum() or len(password) > 24 :
             print("Password contains illegal characters.")
             return False, 'FPC'
 
@@ -75,11 +76,11 @@ def addUser(userID):
     """
     table = openTable()
 
-    if len(userID) > 64:
+    if len(userID) > 16:
         print("Invalid UserID")
         return False, ''
 
-    if len(table) > 8:
+    if len(table) == 8:
         print("Too many accounts.")
         return False, ''
 
