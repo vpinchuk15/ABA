@@ -47,7 +47,7 @@ def login(userID):
             return False, 'LF'
 
         
-        if not password.isascii() and password.isalnum() or len(password) > 24 :
+        if not password.isascii() and password.isalnum() or len(password) > 24 or len(password) < 1 :
             print("Password contains illegal characters.")
             return False, 'FPC'
 
