@@ -168,7 +168,7 @@ def runSession():
                     print("No data to export.")
                 continue
             else:
-                print("Command is not valid.")
+                print("Unrecognized command.")
 
 def parse(fieldValues):
     """
