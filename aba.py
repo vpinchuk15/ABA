@@ -73,21 +73,20 @@ def runSession():
                 else:
                     if audit != '':
                         auditLog.addLog(audit,fieldValues)
-                        print("Access NOT granted")
-
-            
+                        print("Invalid Credentials")
 
             else:
-                print("Need to login to access other commands or command is not valid.")
+                print("No active login session.")
 
         elif command == "LIN":
-            print("Already logged in.")
+            print("An account is currently active; logout before proceeding.")
 
         elif command == "LOU":
 
             auditLog.addLog('LO', session.username)
             session.username = None
             session.access = 0
+            print("OK")
             
         elif command == "CHP":
 

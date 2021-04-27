@@ -100,7 +100,7 @@ def deleteUser(userID):
     """
     table = openTable()
 
-    if len(userID) > 64:
+    if len(userID) > 16:
         print("Invalid UserID")
         return False, ''
 
@@ -135,7 +135,7 @@ def changePassword(userID, oldPassword):
             print("Passwords do not match.")
             return False, 'FPC'
         
-        if not password.isascii() and password.isalnum():
+        if not password.isascii() and password.isalnum() or len(password) > 24 or len(password) < 1:
             print("Password contains illegal characters.")
             return False, 'FPC'
 
