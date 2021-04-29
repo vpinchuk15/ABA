@@ -2,9 +2,9 @@
 #Authors: Dominic Santilla, Nathan Shah
 #Date: Updated: April 17, 2021
 
-import datacomEdit as datacom
-import loginEdit as login
-import auditLogEdit as auditLog
+import maybe as datacom
+import maybeLogin as login
+import maybeA as auditLog
 
 class InvalidInput(Exception): pass
 
@@ -20,21 +20,21 @@ def runSession():
     
     session = Session()
 
-    datacom.UserDatabase()
-    auditLog.AuditLog()
-    login.Login()
+    d = datacom.UserDatabase()
+    a = auditLog.AuditLog()
+    l = login.Login()
     
     while True:
-        if login.checkStartup():
+        if login.checkStartup(l):
             break
         else:
             print("First Time Startup. Create password for admin account.")
-            code,audit = login.login('admin')
+            code,audit = login.login(l,'admin')
 
             if code:
                 session.username = 'admin'
                 session.access = 1
-                auditLog.addLog(audit,session.username)
+                auditLog.addLog(a,audit,session.username)
                 break
             else:
                 print("Try again. This is a necessay condition")
@@ -61,11 +61,11 @@ def runSession():
                     print("No userID given.")
                     continue
 
-                code,audit = login.login(fieldValues)
+                code,audit = login.login(l,fieldValues)
 
                 if code:
                     session.username = fieldValues
-                    auditLog.addLog(audit,session.username)
+                    auditLog.addLog(a,audit,session.username)
 
                     if session.username == 'admin':
                         session.access = 1
@@ -74,7 +74,7 @@ def runSession():
 
                 else:
                     if audit != '':
-                        auditLog.addLog(audit,fieldValues)
+                        auditLog.addLog(a,audit,fieldValues)
                         print("Invalid Credentials")
 
             else:
@@ -85,7 +85,7 @@ def runSession():
 
         elif command == "LOU":
 
-            auditLog.addLog('LO', session.username)
+            auditLog.addLog(a,'LO', session.username)
             session.username = None
             session.access = 0
             print("OK")
@@ -96,14 +96,14 @@ def runSession():
                 print("Old password not given.")
                 continue
 
-            code,audit = login.changePassword(session.username,fieldValues)
+            code,audit = login.changePassword(l,session.username,fieldValues)
 
             if code:
-                auditLog.addLog(audit,session.username)
+                auditLog.addLog(a,audit,session.username)
 
             else:
                 if audit != '':
-                    auditLog.addLog(audit,fieldValues)
+                    auditLog.addLog(a,audit,fieldValues)
 
             
         elif session.access == 1:
@@ -111,21 +111,21 @@ def runSession():
                 print("Admin not authorized")
                 
             elif command == "ADU":
-                login.addUser(fieldValues)
-                auditLog.addLog("AU", 'admin')
+                login.addUser(l,fieldValues)
+                auditLog.addLog(a,"AU", 'admin')
 
             elif command == "DEU":
-                login.deleteUser(fieldValues)
-                auditLog.addLog("DU", 'admin')
+                login.deleteUser(l,fieldValues)
+                auditLog.addLog(a,"DU", 'admin')
 
             elif command == "DAL":
                 if(len(fieldValues) > 0):
-                    auditLog.displayLog(fieldValues)
+                    auditLog.displayLog(a,fieldValues)
                 else:
-                    auditLog.displayLog()
+                    auditLog.displayLog(a)
 
             elif command == "LSU":
-                login.listUsers()
+                login.listUsers(l)
             
             else:
                 print("Command is not valid.")
@@ -137,7 +137,7 @@ def runSession():
             elif command == "ADR":
                 try:
                     fv = parse(fieldValues)
-                    datacom.addRecord(session.username, fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
+                    datacom.addRecord(d,session.username, fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
                                     fv[9], fv[10], fv[11] )
                 except InvalidInput:
                     print("One or more fields are incorrect")
@@ -146,34 +146,34 @@ def runSession():
 
             elif command == "DER":
                 fv = parse2(fieldValues)
-                datacom.deleteRecord(session.username,fv)
+                datacom.deleteRecord(d,session.username,fv)
                 continue
 
             elif command == "EDR":
                 try:
                     fv = parse(fieldValues)
-                    datacom.editRecord(session.username, fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
+                    datacom.editRecord(d,session.username, fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
                                         fv[9], fv[10], fv[11] )
                 except InvalidInput:
                     print("One or more fields are incorrect.")
-
+                
                 continue
 
             elif command == "RER":
                 fv = parse3(fieldValues)
-                datacom.readRecord(session.username, fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
+                datacom.readRecord(d,session.username, fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
                                    fv[9], fv[10], fv[11] )
                 continue
 
             elif command == "IMD":
                 fv = parse2(fieldValues)
-                datacom.importDatabase(session.username, fv)
+                datacom.importDatabase(d,session.username, fv)
                 continue
 
             elif command == "EXD":
                 try:
                     fv = parse2(fieldValues)
-                    datacom.exportDatabase(session.username,fv)
+                    datacom.exportDatabase(d,session.username,fv)
                 except:
                     print("No data to export.")
                 continue
@@ -202,13 +202,14 @@ def parse(fieldValues):
             cleaned[0] = output[0]
         else:
             cleaned[0] = outputA[0]
-
+        
+        
         for i in range(1,len(output),2):
                 if i not in ['SN=', 'GN=', 'PEM=', 'WEM=', 'PPH=', 'WPH=', 'SA=', 'CITY=', 'STP=', 'CTY=', 'PC=']:
                     raise InvalidInput
                 else:
                     continue
-     
+
     for i in range(1,len(output),2):
         if output[i] == 'SN=':
             cleaned[1] = output[i+1]
