@@ -114,7 +114,7 @@ def check(recordID, SN = None, GN = None, PEM = None, WEM = None, PPH = None,
     Validates Inputs to addRecord method
     """
 
-    if recordID == '':
+    if recordID == '' or recordID == None:
         print("No recordID")
         return False
     
