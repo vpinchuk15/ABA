@@ -276,7 +276,7 @@ def readRecord(username, recordID, SN = None, GN = None, PEM = None, WEM = None,
             if value == 'PC':
                 output = output + ' PC=' + users[username].contacts[recordID].PC
 
-    print(output)
+    print(output, end="")
     print("OK")
 
     return None
@@ -338,6 +338,7 @@ def importDatabase(username, filename):
 
 
         saveDatabase(users)
+        print("OK")
 
     return None
 

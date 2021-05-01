@@ -1,0 +1,8 @@
+Enter Command>Enter password:OK
+Enter Command>OK
+Enter Command>Duplicate recordID
+Enter Command>nathan SN=ShahOK
+Enter Command>OK
+Enter Command>OK
+Enter Command>OK
+Enter Command>OK

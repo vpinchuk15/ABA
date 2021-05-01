@@ -1,6 +1,7 @@
 #ABA Module: Login
 #Authors: Nathan Shah
 #Date: Updated: April 17, 2021
+#stopped print statements added end="" to lsu
 
 import pickle
 import bcrypt
@@ -35,9 +36,9 @@ def login(userID):
         return False,''
 
     if table[userID] == None:
-        print("This is the first time the account is being used.")
-        print("You must create a new password. Passwords may contain 1-24 upper- or lower-case letters or numbers.")
-        print("Choose an uncommon password that would be difficult to guess.")
+        #print("This is the first time the account is being used.")
+        #print("You must create a new password. Passwords may contain 1-24 upper- or lower-case letters or numbers.")
+        #print("Choose an uncommon password that would be difficult to guess.")
 
         password = input("Enter Password:")
         password1 = input("Renter Password:")
@@ -58,6 +59,7 @@ def login(userID):
         table[userID] = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
 
         saveTable(table)
+        print("OK")
 
         return True, 'LS, L1'
 
@@ -91,6 +93,7 @@ def addUser(userID):
     table[userID] = None
 
     saveTable(table)
+    print("OK")
 
     return True, 'AD'
 
@@ -124,9 +127,9 @@ def changePassword(userID, oldPassword):
 
     if bcrypt.checkpw(oldPassword.encode("utf-8"), table[userID]):
 
-        print("Create a new password. Passwords may contain up to 24")
-        print("upper- or lower-case letters or numbers. Choose an")
-        print("uncommon password that would be difficult to guess.")
+        #print("Create a new password. Passwords may contain up to 24")
+        #print("upper- or lower-case letters or numbers. Choose an")
+        #print("uncommon password that would be difficult to guess.")
         
         password = input("Enter New Password:")
         password1 = input("Renter New Password:")
@@ -164,7 +167,7 @@ def listUsers():
     table = openTable()
 
     for user in table:
-        print(user)
+        print(user, end ="")
 
     print("OK")
     return None
