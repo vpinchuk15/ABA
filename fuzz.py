@@ -1,4 +1,7 @@
 import subprocess
+#The example cases only work when there is a already logged
+#in user named n with the password qw2
+#Need to include the EXT command at the end of every fuzz in input
 
 def fuzz():
     """Does the fuzzing"""
@@ -57,4 +60,4 @@ def addTestCase(inputString, answer):
     f2.close()
 
 if __name__ == "__main__":
-    addTestCase('ADR nathan', 'OK') #fuzz()
+    fuzz()
