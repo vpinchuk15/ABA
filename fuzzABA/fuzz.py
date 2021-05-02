@@ -11,6 +11,7 @@ def fuzz():
     fuzzLogin(10)
     adrANDedr(100)
     rer(100)
+    delete(10)
     imd(100)
     addTestCase('EXT','OK')
     testing()
@@ -125,6 +126,12 @@ def rer(total):
     for i in range(total//4):
         value = 'RER ' + ''.join(random.choice(string.punctuation) for i in range(7))
         addTestCase(value, 'RecordID not found')
+
+def delete(total):
+    for i in range(total):
+        value = "DER " + ''.join(random.choice(string.ascii_letters) for i in range(5)) + ''.join(random.choice(string.punctuation) for i in range(5))
+        addTestCase(value,'RecordID not found')
+
 
 def imd(total):
 
