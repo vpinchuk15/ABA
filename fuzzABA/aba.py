@@ -1,6 +1,8 @@
 #ABA Module: HUB
 #Authors: Dominic Santilla, Nathan Shah
 #Date: Updated: April 17, 2021
+#Try loop has been added fof fuzzing <- delete 
+#EXT command now says break <- change to exit() later
 
 import datacomEdit as datacom
 import loginEdit as login
@@ -16,7 +18,7 @@ class Session:
 
 def runSession():
 
-    print("Address Book Application, version "+ '0.1' + ". Type “HLP” for a list of commands.")
+    #print("Address Book Application, version "+ '0.1' + ". Type “HLP” for a list of commands.")
     
     session = Session()
 
@@ -28,7 +30,7 @@ def runSession():
         if login.checkStartup():
             break
         else:
-            print("First Time Startup. Create password for admin account.")
+            #print("First Time Startup. Create password for admin account.")
             code,audit = login.login('admin')
 
             if code:
@@ -37,151 +39,154 @@ def runSession():
                 auditLog.addLog(audit,session.username)
                 break
             else:
-                print("Try again. This is a necessay condition")
+                continue#print("Try again. This is a necessay condition")
 
     while True:
-        print()
-        command_str = input("Enter Command>")
+        try:
+            #print()
+            command_str = input("Enter Command>")
 
-        command = command_str[:3]
+            command = command_str[:3]
 
-        fieldValues = command_str[3:].strip()
+            fieldValues = command_str[3:].strip()
             
-        if command == 'EXT':
-            session.username = None
-            session.access = 0
-            print("OK")
-            exit()
-        elif command == "HLP":
-            print(showHelp(fieldValues))
-        elif session.username == None:  
+            if command == 'EXT':
+                session.username = None
+                session.access = 0
+                print("OK")
+                break #exit()
+            elif command == "HLP":
+                print(showHelp(fieldValues))
+            elif session.username == None:  
                 
-            if command == "LIN":
+                if command == "LIN":
+                    if len(fieldValues) == 0:
+                        print("No userID given.")
+                        continue
+
+                    code,audit = login.login(fieldValues)
+
+                    if code:
+                        session.username = fieldValues
+                        auditLog.addLog(audit,session.username)
+
+                        if session.username == 'admin':
+                            session.access = 1
+                        else:
+                            session.access = 0
+
+                    else:
+                        if audit != '':
+                            auditLog.addLog(audit,fieldValues)
+
+                else:
+                    print("No active login session.")
+
+            elif command == "LIN":
+                print("An account is currently active; logout before proceeding.")
+
+            elif command == "LOU":
+
+                auditLog.addLog('LO', session.username)
+                session.username = None
+                session.access = 0
+                print("OK")
+                
+            elif command == "CHP":
+
                 if len(fieldValues) == 0:
-                    print("No userID given.")
+                    print("Old password not given.")
                     continue
 
-                code,audit = login.login(fieldValues)
+                code,audit = login.changePassword(session.username,fieldValues)
 
                 if code:
-                    session.username = fieldValues
                     auditLog.addLog(audit,session.username)
-
-                    if session.username == 'admin':
-                        session.access = 1
-                    else:
-                        session.access = 0
 
                 else:
                     if audit != '':
                         auditLog.addLog(audit,fieldValues)
 
-            else:
-                print("No active login session.")
-
-        elif command == "LIN":
-            print("An account is currently active; logout before proceeding.")
-
-        elif command == "LOU":
-
-            auditLog.addLog('LO', session.username)
-            session.username = None
-            session.access = 0
-            print("OK")
                 
-        elif command == "CHP":
-
-            if len(fieldValues) == 0:
-                print("Old password not given.")
-                continue
-
-            code,audit = login.changePassword(session.username,fieldValues)
-
-            if code:
-                auditLog.addLog(audit,session.username)
-
-            else:
-                if audit != '':
-                    auditLog.addLog(audit,fieldValues)
-
-                
-        elif session.access == 1:
-            if command in ["ADR", "DER", "EDR", "RER", "IMD", "EXD"]:
-                print("Admin not authorized")
+            elif session.access == 1:
+                if command in ["ADR", "DER", "EDR", "RER", "IMD", "EXD"]:
+                    print("Admin not authorized")
                     
-            elif command == "ADU":
-                login.addUser(fieldValues)
-                auditLog.addLog("AU", 'admin')
+                elif command == "ADU":
+                    login.addUser(fieldValues)
+                    auditLog.addLog("AU", 'admin')
 
-            elif command == "DEU":
-                login.deleteUser(fieldValues)
-                auditLog.addLog("DU", 'admin')
+                elif command == "DEU":
+                    login.deleteUser(fieldValues)
+                    auditLog.addLog("DU", 'admin')
 
-            elif command == "DAL":
-                if(len(fieldValues) > 0):
-                    auditLog.displayLog(fieldValues)
+                elif command == "DAL":
+                    if(len(fieldValues) > 0):
+                        auditLog.displayLog(fieldValues)
+                    else:
+                        auditLog.displayLog()
+
+                elif command == "LSU":
+                    login.listUsers()
+                
                 else:
-                    auditLog.displayLog()
-
-            elif command == "LSU":
-                login.listUsers()
-                
-            else:
-                print("Command is not valid.")
+                    print("Command is not valid.")
             
-        else:
-            if command in ["ADU", "DEU", "DAL"]:
-                print("Admin not active")
+            else:
+                if command in ["ADU", "DEU", "DAL"]:
+                    print("Admin not active")
 
-            elif command == "ADR":
-                try:
-                    fv = parse(fieldValues)
-                    datacom.addRecord(session.username, fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
+                elif command == "ADR":
+                    try:
+                        fv = parse(fieldValues)
+                        datacom.addRecord(session.username, fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
                                         fv[9], fv[10], fv[11] )
-                except InvalidInput:
-                    print("One or more fields are incorrect")
+                    except InvalidInput:
+                        print("One or more fields are incorrect")
                     
-                continue
+                    continue
 
-            elif command == "DER":
-                fv = parse2(fieldValues)
-                datacom.deleteRecord(session.username,fv)
-                continue
+                elif command == "DER":
+                    fv = parse2(fieldValues)
+                    datacom.deleteRecord(session.username,fv)
+                    continue
 
-            elif command == "EDR":
-                try:
-                    fv = parse(fieldValues)
-                    datacom.editRecord(session.username, fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
+                elif command == "EDR":
+                    try:
+                        fv = parse(fieldValues)
+                        datacom.editRecord(session.username, fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
                                             fv[9], fv[10], fv[11] )
-                except InvalidInput:
-                    print("One or more fields are incorrect.")
+                    except InvalidInput:
+                        print("One or more fields are incorrect.")
 
                     continue
 
-            elif command == "RER":
-                try:
-                    fv = parse3(fieldValues)
-                    datacom.readRecord(session.username, fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
+                elif command == "RER":
+                    try:
+                        fv = parse3(fieldValues)
+                        datacom.readRecord(session.username, fv[0], fv[1], fv[2], fv[3], fv[4], fv[5], fv[6], fv[7], fv[8],
                                         fv[9], fv[10], fv[11] )
-                except InvalidInput:
-                    print("Invalid fieldname(s)")
-                continue
+                    except InvalidInput:
+                        print("Invalid fieldname(s)")
+                    continue
 
-            elif command == "IMD":
-                fv = parse2(fieldValues)
-                datacom.importDatabase(session.username, fv)
-                continue
-
-            elif command == "EXD":
-                try:
+                elif command == "IMD":
                     fv = parse2(fieldValues)
-                    datacom.exportDatabase(session.username,fv)
-                except:
-                    print("No data to export.")
-                continue
-            else:
-                print("Unrecognized command.")
-        
+                    datacom.importDatabase(session.username, fv)
+                    continue
+
+                elif command == "EXD":
+                    try:
+                        fv = parse2(fieldValues)
+                        datacom.exportDatabase(session.username,fv)
+                    except:
+                        print("No data to export.")
+                    continue
+                else:
+                    print("Unrecognized command.")
+        except:
+            print("Error Detected")
+
 def parse(fieldValues):
     """
     Creates values for entry into ADR, EDR

@@ -1,9 +1,0 @@
-LIN n
-qw2
-ADR nathan SN="Shah"
-ADR nathan
-RER nathan SN
-EDR nathan SN="Chodhari" 
-DER nathan
-LOU
-EXT

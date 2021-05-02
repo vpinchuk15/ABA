@@ -2,6 +2,7 @@
 #Author: Nathan Shah, Dominic Santilla
 #Date: Updated: April 15, 2021
 #PLEASE READ: Before intial use need to create database via auditlog.AuditLog()
+#Changed line 58 end="" <- delete after fuzzing
 
 import pickle
 from collections import deque
@@ -54,7 +55,7 @@ def displayLog(specified_ID = None):
 
     for record in log:
         if specified_ID == None or record.userID == specified_ID:
-            print("%s, %s, %s, %s" %(record.date, record.time, record.recordType, record.userID))
+            print("%s, %s, %s, %s" %(record.date, record.time, record.recordType, record.userID), end="")
 
     print("OK")
     return None
